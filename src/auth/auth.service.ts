@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { PasswordService } from './password.service';
 import { JwtService } from '@nestjs/jwt';
@@ -37,6 +42,27 @@ export class AuthService {
 
       throw new Error(error);
     }
+  }
+
+  async login(email: string, password: string): Promise<Token> {
+    const user = await this.userService.findByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException(`No user found for email: ${email}`);
+    }
+
+    const passwordValid = await this.passwordService.validatePassword(
+      password,
+      user.password,
+    );
+
+    if (!passwordValid) {
+      throw new BadRequestException('Invalid password');
+    }
+
+    return this.generateTokens({
+      userId: user.id,
+    });
   }
 
   generateTokens(payload: { userId: number }): Token {
