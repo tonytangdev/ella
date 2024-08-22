@@ -11,16 +11,19 @@ import { SignUpDTO } from './dto/sign-up.dto';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
 import { JwtGuard } from './jwt.guard';
+import { Public } from 'src/common/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('signup')
   async signup(@Body() signUpDTO: SignUpDTO) {
     return this.authService.createUser(signUpDTO.email, signUpDTO.password);
   }
 
+  @Public()
   @Post('login')
   async login(@Body() loginDTO: LoginDTO) {
     return this.authService.login(loginDTO.email, loginDTO.password);

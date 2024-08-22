@@ -6,10 +6,19 @@ import { PasswordService } from './password.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { SecurityConfig } from 'src/common/config/config.interface';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtGuard } from './jwt.guard';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, PasswordService],
+  providers: [
+    AuthService,
+    PasswordService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtGuard,
+    },
+  ],
   imports: [
     UserModule,
     JwtModule.registerAsync({
