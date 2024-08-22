@@ -5,7 +5,8 @@ import { LoginDTO } from './dto/login.dto';
 import { JwtGuard } from './jwt.guard';
 import { Public } from 'src/common/public.decorator';
 import { RefreshDTO } from './dto/refresh.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { User } from 'src/common/user.decorator';
+import { UserPayload } from 'src/common/user-payload.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -34,5 +35,11 @@ export class AuthController {
   async refresh(@Body() refreshDTO: RefreshDTO) {
     const { refreshToken } = refreshDTO;
     return this.authService.refreshToken(refreshToken);
+  }
+
+  @UseGuards(JwtGuard)
+  @Post('logout')
+  async logout(@User() user: UserPayload) {
+    await this.authService.logout(user.userId);
   }
 }

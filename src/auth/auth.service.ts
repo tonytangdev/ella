@@ -126,4 +126,8 @@ export class AuthService {
       expiresIn: this.configService.get<SecurityConfig>('security').refreshIn,
     };
   }
+
+  async logout(userId: number) {
+    return this.userService.setRefreshToken(userId, null);
+  }
 }
