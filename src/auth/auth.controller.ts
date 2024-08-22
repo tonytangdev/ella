@@ -1,17 +1,11 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { SignUpDTO } from './dto/sign-up.dto';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
 import { JwtGuard } from './jwt.guard';
 import { Public } from 'src/common/public.decorator';
+import { RefreshDTO } from './dto/refresh.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -33,5 +27,12 @@ export class AuthController {
   @Get('profile')
   async profile() {
     return 'You are logged in';
+  }
+
+  @UseGuards(JwtGuard)
+  @Post('refresh')
+  async refresh(@Body() refreshDTO: RefreshDTO) {
+    const { refreshToken } = refreshDTO;
+    return this.authService.refreshToken(refreshToken);
   }
 }

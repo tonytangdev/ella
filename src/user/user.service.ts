@@ -44,4 +44,25 @@ export class UserService {
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
+
+  setRefreshToken(userId: number, refreshToken: string) {
+    return this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        refreshToken,
+      },
+    });
+  }
+
+  async findByRefreshToken(refreshToken: string) {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        refreshToken,
+      },
+    });
+
+    return user;
+  }
 }

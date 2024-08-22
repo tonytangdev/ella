@@ -30,9 +30,13 @@ export class AuthService {
         password: hashedPassword,
       });
 
-      return this.generateTokens({
+      const tokens = this.generateTokens({
         userId: user.id,
       });
+
+      await this.userService.setRefreshToken(user.id, tokens.refreshToken);
+
+      return tokens;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
@@ -60,9 +64,41 @@ export class AuthService {
       throw new BadRequestException('Invalid password');
     }
 
-    return this.generateTokens({
+    const tokens = this.generateTokens({
       userId: user.id,
     });
+
+    await this.userService.setRefreshToken(user.id, tokens.refreshToken);
+
+    return tokens;
+  }
+
+  async refreshToken(refreshToken: string): Promise<Token> {
+    const user = this.userService.findByRefreshToken(refreshToken);
+
+    if (!user) {
+      throw new BadRequestException('Invalid refresh token');
+    }
+
+    try {
+      const refreshConfig = this.getRefreshSecurityConfig();
+      const verifiedToken = this.jwtService.verify(refreshToken, {
+        secret: refreshConfig.secret,
+      });
+
+      const tokens = this.generateTokens({
+        userId: verifiedToken.userId,
+      });
+
+      await this.userService.setRefreshToken(
+        verifiedToken.userId,
+        tokens.refreshToken,
+      );
+
+      return tokens;
+    } catch (error) {
+      throw new BadRequestException('Invalid refresh token');
+    }
   }
 
   generateTokens(payload: { userId: number }): Token {
@@ -77,10 +113,17 @@ export class AuthService {
   }
 
   private generateRefreshToken(payload: { userId: number }): string {
-    const securityConfig = this.configService.get<SecurityConfig>('security');
+    const refreshSecurityConfig = this.getRefreshSecurityConfig();
     return this.jwtService.sign(payload, {
-      secret: this.configService.get('JWT_REFRESH_SECRET'),
-      expiresIn: securityConfig.refreshIn,
+      secret: refreshSecurityConfig.secret,
+      expiresIn: refreshSecurityConfig.expiresIn,
     });
+  }
+
+  private getRefreshSecurityConfig() {
+    return {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+      expiresIn: this.configService.get<SecurityConfig>('security').refreshIn,
+    };
   }
 }

@@ -7,4 +7,5 @@ export class User implements UserSchema {
   password: string;
   createdAt: Date;
   updatedAt: Date;
+  refreshToken: string;
 }
