@@ -20,8 +20,12 @@ export class PostService {
     return post;
   }
 
-  findAll() {
-    return `This action returns all post`;
+  findAll(params: { userId: number }) {
+    return this.prismaService.post.findMany({
+      where: {
+        authorId: params.userId,
+      },
+    });
   }
 
   findOne(id: number) {

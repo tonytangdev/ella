@@ -26,8 +26,11 @@ export class PostController {
   }
 
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  findAll(@User() user: UserPayload) {
+    const userId = user.userId;
+    return this.postService.findAll({
+      userId
+    });
   }
 
   @Get(':id')
