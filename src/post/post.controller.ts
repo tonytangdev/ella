@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { UserPayload } from 'src/common/user-payload.interface';
 import { User } from 'src/common/user.decorator';
 import { ApiTags } from '@nestjs/swagger';
