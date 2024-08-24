@@ -68,4 +68,12 @@ export class CommentsService {
       },
     });
   }
+
+  async getAnswers(commentId: number) {
+    return this.prismaService.comment.findMany({
+      where: {
+        commentId,
+      },
+    });
+  }
 }

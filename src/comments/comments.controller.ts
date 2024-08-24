@@ -33,6 +33,11 @@ export class CommentsController {
     );
   }
 
+  @Get(':id/answers')
+  getAnswers(@Param('id') id: string) {
+    return this.commentsService.getAnswers(+id);
+  }
+
   @Post()
   create(
     @User() user: UserPayload,
