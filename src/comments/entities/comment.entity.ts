@@ -5,6 +5,7 @@ export class Comment implements CommentSchema {
   text: string;
   authorId: number;
   postId: string;
+  commentId: number;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;

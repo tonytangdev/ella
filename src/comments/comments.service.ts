@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { PrismaService } from 'nestjs-prisma';
+import { AnswerCommentDto } from './dto/answer-comment.dto';
 
 @Injectable()
 export class CommentsService {
@@ -42,6 +43,28 @@ export class CommentsService {
       where: {
         postId: params.postId,
         deletedAt: null,
+      },
+    });
+  }
+
+  async answerToComment(
+    authorId: number,
+    commentId: number,
+    answerToCommentDto: AnswerCommentDto,
+  ) {
+    return this.prismaService.comment.create({
+      data: {
+        text: answerToCommentDto.text,
+        author: {
+          connect: {
+            id: authorId,
+          },
+        },
+        comment: {
+          connect: {
+            id: commentId,
+          },
+        },
       },
     });
   }
