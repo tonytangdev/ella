@@ -36,4 +36,13 @@ export class CommentsService {
 
     return comment;
   }
+
+  async findAll(params: { postId: string }) {
+    return this.prismaService.comment.findMany({
+      where: {
+        postId: params.postId,
+        deletedAt: null,
+      },
+    });
+  }
 }

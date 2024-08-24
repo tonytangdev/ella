@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   NotFoundException,
@@ -13,11 +12,24 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UserPayload } from 'src/common/user-payload.interface';
 import { User } from 'src/common/user.decorator';
 import { ApiTags } from '@nestjs/swagger';
+import { CommentsService } from 'src/comments/comments.service';
 
 @ApiTags('Post')
 @Controller('post')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly commentsService: CommentsService,
+  ) {}
+
+  @Get(':id/comments')
+  getComments(@Param('id') id: string) {
+    const comments = this.commentsService.findAll({
+      postId: id,
+    });
+
+    return comments;
+  }
 
   @Post()
   async create(
@@ -55,6 +67,6 @@ export class PostController {
   @Delete(':id')
   remove(@User() user: UserPayload, @Param('id') id: string) {
     const userId = user.userId;
-  return this.postService.remove(userId, id);
+    return this.postService.remove(userId, id);
   }
 }
