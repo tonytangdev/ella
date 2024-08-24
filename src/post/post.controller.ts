@@ -21,7 +21,10 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  async create(@User() user: UserPayload, @Body() createPostDto: CreatePostDto) {
+  async create(
+    @User() user: UserPayload,
+    @Body() createPostDto: CreatePostDto,
+  ) {
     const userId = user.userId;
     return this.postService.create(userId, createPostDto);
   }
@@ -50,13 +53,12 @@ export class PostController {
     return post;
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
-  }
-
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  remove(@User() user: UserPayload, @Param('id') id: string) {
+    const userId = user.userId;
+    return this.postService.remove({
+      userId,
+      id,
+    });
   }
 }
