@@ -27,12 +27,12 @@ model User {
 
 model Post {
   id        String    @id @default(cuid())
-  url       String
+  url       String    @unique
   author    User      @relation(fields: [authorId], references: [id])
   authorId  Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Comment   Comment[]
+  comments   Comment[]
 }
 
 model Comment {
