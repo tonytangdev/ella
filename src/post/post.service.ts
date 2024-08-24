@@ -36,12 +36,12 @@ export class PostService {
     });
   }
 
-  async remove(params: { userId: number; id: string }) {
+  async remove(userId: number, id: string) {
     try {
       const post = await this.prismaService.post.update({
         where: {
-          id: params.id,
-          authorId: params.userId,
+          id: id,
+          authorId: userId,
         },
         data: {
           deletedAt: new Date(),

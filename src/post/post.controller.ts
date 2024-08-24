@@ -55,9 +55,6 @@ export class PostController {
   @Delete(':id')
   remove(@User() user: UserPayload, @Param('id') id: string) {
     const userId = user.userId;
-    return this.postService.remove({
-      userId,
-      id,
-    });
+  return this.postService.remove(userId, id);
   }
 }
