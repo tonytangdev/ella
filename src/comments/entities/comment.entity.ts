@@ -7,4 +7,5 @@ export class Comment implements CommentSchema {
   postId: string;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt: Date;
 }

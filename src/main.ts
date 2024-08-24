@@ -21,6 +21,9 @@ async function bootstrap() {
   const nestConfig = config.get<NestConfig>('nest');
   const swaggerConfig = config.get('swagger');
 
+  const apiPath = 'api';
+  app.setGlobalPrefix(apiPath);
+
   // Swagger Api
   if (swaggerConfig.enabled) {
     const options = new DocumentBuilder()
@@ -32,7 +35,11 @@ async function bootstrap() {
       .build();
     const document = SwaggerModule.createDocument(app, options);
 
-    SwaggerModule.setup(swaggerConfig.path || 'api', app, document);
+    SwaggerModule.setup(
+      `${apiPath}/${swaggerConfig.path ?? 'docs'}`,
+      app,
+      document,
+    );
   }
 
   await app.listen(nestConfig.port);

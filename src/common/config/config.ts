@@ -14,7 +14,7 @@ const config: Config = {
     title: 'Ella',
     description: 'Ella REST API',
     version: '0.0.1',
-    path: 'api',
+    path: 'docs',
   },
 };
 

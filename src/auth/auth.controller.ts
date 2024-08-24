@@ -7,7 +7,9 @@ import { Public } from 'src/common/public.decorator';
 import { RefreshDTO } from './dto/refresh.dto';
 import { User } from 'src/common/user.decorator';
 import { UserPayload } from 'src/common/user-payload.interface';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

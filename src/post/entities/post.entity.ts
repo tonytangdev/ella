@@ -6,4 +6,5 @@ export class Post implements PostEntity {
   authorId: number;
   createdAt: Date;
   updatedAt: Date;
+  deletedAt: Date;
 }
