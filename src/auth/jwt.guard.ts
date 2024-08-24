@@ -14,8 +14,8 @@ import { UserService } from 'src/user/user.service';
 @Injectable()
 export class JwtGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
-    private userService: UserService,
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
     private readonly reflector: Reflector,
   ) {}
 

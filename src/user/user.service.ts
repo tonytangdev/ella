@@ -19,10 +19,6 @@ export class UserService {
     return user;
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
-
   async findOne(id: number) {
     const user = await this.prismaService.user.findUnique({
       where: {
@@ -44,14 +40,19 @@ export class UserService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    const user = this.prismaService.user.update({
+      where: {
+        id,
+      },
+      data: {
+        ...updateUserDto,
+      },
+    });
+
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
-
-  setRefreshToken(userId: number, refreshToken: string) {
+  async setRefreshToken(userId: number, refreshToken: string) {
     return this.prismaService.user.update({
       where: {
         id: userId,
