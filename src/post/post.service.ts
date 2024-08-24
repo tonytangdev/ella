@@ -28,8 +28,13 @@ export class PostService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  findOne(params: { userId: number; id: string }) {
+    return this.prismaService.post.findUnique({
+      where: {
+        authorId: params.userId,
+        id: params.id,
+      },
+    });
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {

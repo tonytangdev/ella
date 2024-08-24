@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -20,22 +21,33 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  create(@User() user: UserPayload, @Body() createPostDto: CreatePostDto) {
+  async create(@User() user: UserPayload, @Body() createPostDto: CreatePostDto) {
     const userId = user.userId;
     return this.postService.create(userId, createPostDto);
   }
 
   @Get()
-  findAll(@User() user: UserPayload) {
+  async findAll(@User() user: UserPayload) {
     const userId = user.userId;
     return this.postService.findAll({
-      userId
+      userId,
     });
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+  async findOne(@User() user: UserPayload, @Param('id') id: string) {
+    const userId = user.userId;
+
+    const post = await this.postService.findOne({
+      userId: userId,
+      id: id,
+    });
+
+    if (!post) {
+      throw new NotFoundException();
+    }
+
+    return post;
   }
 
   @Patch(':id')
