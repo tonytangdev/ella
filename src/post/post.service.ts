@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PrismaService } from 'nestjs-prisma';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PostService {
@@ -56,5 +57,23 @@ export class PostService {
         throw error;
       }
     }
+  }
+
+  getAllPosts(cursor: string, skip: number = 0, take: number = 10) {
+    const findManyArgs: Prisma.PostFindManyArgs = {
+      skip,
+      take,
+      where: {
+        deletedAt: null,
+      },
+    };
+
+    if (cursor) {
+      findManyArgs.cursor = {
+        id: cursor,
+      };
+    }
+
+    return this.prismaService.post.findMany(findManyArgs);
   }
 }

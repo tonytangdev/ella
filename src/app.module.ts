@@ -10,6 +10,8 @@ import { PrismaModule } from 'nestjs-prisma';
 import config from './common/config/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { FeedController } from './feed/feed.controller';
+import { FeedModule } from './feed/feed.module';
 
 @Module({
   imports: [
@@ -41,8 +43,9 @@ import { APP_GUARD } from '@nestjs/core';
         limit: 100,
       },
     ]),
+    FeedModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, FeedController],
   providers: [
     AppService,
     {
